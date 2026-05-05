@@ -8,3 +8,7 @@ CompileFlags:
     - -fno-malloc-dce
     - -f*
     - -m*
+Diagnostics:
+  Suppress:
+    - pp_file_not_found
+    - unknown_typename
