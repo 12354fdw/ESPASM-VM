@@ -1,3 +1,3 @@
 #pragma once
 
-void init_systems(void);
+void initSystems(void);

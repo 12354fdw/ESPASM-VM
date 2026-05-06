@@ -6,7 +6,7 @@
 
 static const char *TAG = "INIT";
 
-static void init_nvs() {
+static void initNvs() {
 	esp_err_t ret = nvs_flash_init();
 
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
@@ -20,15 +20,15 @@ static void init_nvs() {
 	ESP_LOGI(TAG, "[  OK  ] NVS");
 }
 
-static void init_netif() {
+static void initNetif() {
 	ESP_ERROR_CHECK(esp_netif_init());
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
 	ESP_LOGI(TAG, "[  OK  ] netif");
 }
 
-void init_systems() {
-	init_nvs();
-	init_netif();
+void initSystems() {
+	initNvs();
+	initNetif();
 
 	ESP_LOGI(TAG, "ESP32 INITALIZED");
 

@@ -3,7 +3,7 @@
 #include "../components/init_systems/includes/init.hpp"
 
 extern "C" void app_main(void) {
-	init_systems();
+	initSystems();
 
 	ESP_LOGI(TAG, "Hello, world!");
 }
