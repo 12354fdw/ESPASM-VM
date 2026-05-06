@@ -1,14 +1,14 @@
 CompileFlags:
-  Remove: 
-    - -mlongcalls
-    - -fno-shrink-wrap
-    - -fstrict-volatile-bitfields
-    - -fno-tree-switch-conversion
-    - -fzero-init-padding-bits=all
-    - -fno-malloc-dce
-    - -f*
+  CompilationDatabase: build
+  Remove:
     - -m*
-Diagnostics:
-  Suppress:
-    - pp_file_not_found
-    - unknown_typename
+    - -f*
+    - -std=gnu*
+    - "@*"
+    - -specs=*
+    - "-specs=*"
+    - -Wno-frame-address
+  Add:
+    - -isystem/home/_12354fdw/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/picolibc/xtensa-esp-elf/sys-include
+    - -isystem/home/_12354fdw/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/sys-include
+    - -isystem/home/_12354fdw/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/include
