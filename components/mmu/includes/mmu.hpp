@@ -16,12 +16,18 @@ struct Page {
 
 struct Frame {
 	uint8_t *data;
-	uint32_t phyAddr;
+	// uint32_t phyAddr; // theres no need? huh?
 
 	bool inUse; // used by a page?
 	bool dirty;
 	bool locked; // is it being written or read from
 	uint32_t lastAccess;
+};
+
+struct SwapFrame {
+	uint8_t *data;
+
+	bool inUse;
 };
 
 inline uint32_t getPageIdx(uint32_t vaddr) { return vaddr / PAGE_SIZE_BYTES; }
@@ -36,6 +42,9 @@ class MMU {
 
   private:
 	Frame frames[MAX_FRAMES];
+
+	uint32_t swapFrameCount;
+	SwapFrame* swapFrames;
 
 	// max of 10 processes
 	std::unordered_map<uint32_t, Page> pageTable[10]; // pageTable[PID][pageIdx]

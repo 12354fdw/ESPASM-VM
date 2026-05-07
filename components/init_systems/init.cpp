@@ -84,7 +84,7 @@ static void postFlash() {
 	nvs_get_u32(nvsHandle, "littleFsTotal", &lastTotal);
 
 	if (lastTotal != 0 && total < lastTotal) {
-		ESP_LOGE(
+		ESP_LOGW(
 			PTAG,
 			"[ WARN ] Flash capacity lower than last time! (prev=%d, now=%d)",
 			lastTotal, total);

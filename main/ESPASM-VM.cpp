@@ -17,7 +17,4 @@ extern "C" void app_main(void) {
 			 heap_caps_get_free_size(MALLOC_CAP_8BIT));
 	ESP_LOGI("MEMCHECK", "LARGEST BLOCK: %lu bytes",
 			 heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
-
-	ESP_LOGI("MEMCHECK", "PSRAM: %lu bytes",
-			 heap_caps_get_total_size(MALLOC_CAP_SPIRAM));
 }

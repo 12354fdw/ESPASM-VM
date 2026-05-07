@@ -10,24 +10,43 @@
 static const char *TAG = "MMU";
 
 MMU::MMU() {
-	uint32_t allocated = 0;
-	for (int i = 0; i < MAX_FRAMES; i++) {
+	// neat memory saving trick
+	uint32_t i = 0;
+
+	for (; i < MAX_FRAMES; i++) {
 		void *addr = heap_caps_calloc(1, PAGE_SIZE_BYTES, MALLOC_CAP_8BIT);
 
 		if (!addr)
 			continue;
-		allocated++;
 
 		frames[i].data = static_cast<uint8_t *>(addr);
-		frames[i].phyAddr = i * PAGE_SIZE_BYTES;
 		frames[i].inUse = false;
 		frames[i].dirty = false;
 		frames[i].locked = false;
 		frames[i].lastAccess = 0;
 	}
 
-	ESP_LOGI(TAG, "allocated %d/%d frames (%d bytes)", allocated, MAX_FRAMES,
-			 allocated * PAGE_SIZE_BYTES);
+	ESP_LOGI(TAG, "allocated %d/%d frames (%d bytes)", i, MAX_FRAMES,
+			 i * PAGE_SIZE_BYTES);
+
+	
+	// SWAP allocation
+	uint32_t swapSize = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
+	swapFrameCount = swapSize / PAGE_SIZE_BYTES;
+
+	ESP_LOGI(TAG, "now allocating swap on psram, size=%lu", swapSize);
+
+	// saving memory on SRAM
+	swapFrames = (SwapFrame *)heap_caps_calloc(1, swapFrameCount * sizeof(SwapFrame), MALLOC_CAP_SPIRAM);
+
+	i = 0;
+	for (; i < swapFrameCount; i++) {
+		void *addr = heap_caps_calloc(1, PAGE_SIZE_BYTES, MALLOC_CAP_SPIRAM);
+		swapFrames[i].data = (uint8_t *)addr;
+		swapFrames[i].inUse = false;
+	}
+
+	ESP_LOGI(TAG, "allocated %d frames on PSRAM (%d bytes)", i, i * PAGE_SIZE_BYTES);
 }
 
 MMU::~MMU() {
@@ -87,7 +106,7 @@ Page *MMU::resolvePage(uint32_t vaddr, uint32_t processId) {
 Frame *MMU::loadPage(Page *page) {
 
 	// already in memory
-	if (page->frameIdx != -1) {
+	if (page->present) {
 		return &frames[page->frameIdx];
 	}
 
